@@ -1,6 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import { useState } from "react";
+import { validate } from "../utils/validate";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { FirebaseError } from "firebase/app";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/slices/userSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,9 +20,77 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
   const [isSignIn, setIsSignIn] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleToggleSignIn = () => {
     setIsSignIn(!isSignIn);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const error = isSignIn
+      ? validate(email, password, false)
+      : validate(email, password, true, username, confirmPassword);
+
+    setError(error);
+
+    if (error) return;
+
+    if (!isSignIn) {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        const user = userCredential.user;
+        console.log(user);
+
+        await updateProfile(user, {
+          displayName: username,
+          photoURL:
+            "https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.webp",
+        });
+
+        const {
+          uid,
+          email: userEmail,
+          displayName,
+          photoURL,
+        } = auth.currentUser!;
+        dispatch(setUser({ uid, email: userEmail, displayName, photoURL }));
+
+        navigate("/browse");
+      } catch (error) {
+        console.log(error);
+        navigate("/error");
+      }
+    } else {
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+        console.log(user);
+
+        navigate("/browse");
+      } catch (error: unknown) {
+        if (error instanceof FirebaseError) {
+          console.log(error.code);
+
+          if (error.code === "auth/invalid-credential") {
+            setError("Please check your email and password");
+          } else if (error.code === "auth/too-many-requests") {
+            setError("Too many failed login attempts. Please try again later.");
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -27,20 +106,31 @@ const Login = () => {
         <Header />
         <div className="flex w-[100%] justify-center items-center p-4">
           <div className="min-h-[707px] px-[68px] py-[48px] bg-[#000000b3] rounded-[4px] flex flex-col m-0 w-[25%] sm:w-[100%] md:w-[100%] max-w-[450px]">
-            <header className="text-left">
-              <h1 className="m-0 mb-7 p-0 text-white text-3xl font-bold">
-                Sign&nbsp;{isSignIn ? "In" : "Up"}
-              </h1>
-            </header>
+            <div className="flex flex-col gap-y-3">
+              {error && (
+                <div className="w-[100%] bg-red-900/50 rounded-sm flex items-center gap-2 p-2">
+                  <span>
+                    <AiOutlineExclamationCircle className="text-red-500 h-5 w-5 font-semibold" />
+                  </span>
+                  <p className="text-sm text-wrap text-red-300">{error}</p>
+                </div>
+              )}
+              <header className="text-left">
+                <h1 className="m-0 mb-7 p-0 text-white text-3xl font-bold">
+                  Sign&nbsp;{isSignIn ? "In" : "Up"}
+                </h1>
+              </header>
+            </div>
             <form className="flex flex-col gap-4">
               <input
                 type="email"
                 name="email"
                 id="email"
+                autoComplete="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-black/30 border border-gray-500 p-3 rounded-md outline-none hover:border-gray-200 focus:border-gray-200"
+                className="bg-black/30 border border-gray-500 p-3 rounded-md outline-none hover:border-gray-200 focus:border-gray-200 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500 hover:invalid:border-red-500 hover:invalid:ring-red-500 autofill:!bg-black/30 autofill:focus:!bg-black/30"
               />
               {!isSignIn && (
                 <input
@@ -73,7 +163,10 @@ const Login = () => {
                   className="bg-black/30 border border-gray-500 p-3 rounded-md outline-none hover:border-gray-200 focus:border-gray-200"
                 />
               )}
-              <button className="bg-red-700 rounded p-2 font-semibold hover:bg-red-600">
+              <button
+                className="bg-red-700 rounded p-2 font-semibold hover:bg-red-600"
+                onClick={handleSubmit}
+              >
                 Sign {!isSignIn ? "Up" : "In"}
               </button>
               {isSignIn && (
