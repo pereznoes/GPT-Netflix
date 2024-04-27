@@ -45,7 +45,7 @@ const GPTSearchBar = () => {
     <form className="w-[37%]">
       <label
         htmlFor="search"
-        className="flex items-center justify-between px-5 py-3 bg-gray-500/80 rounded-[3rem] w-full"
+        className="flex items-center justify-between px-5 py-3 bg-black/70 rounded-[3rem] w-full"
       >
         <div className="pl-2 w-full">
           <input
@@ -54,7 +54,7 @@ const GPTSearchBar = () => {
             name="search"
             id="search"
             placeholder="What would you like to watch today?"
-            className="border-none outline-none bg-transparent text-white placeholder:text-gray-300 text-xl w-full pr-5 tracking-normal"
+            className="border-none outline-none bg-transparent text-white placeholder:text-gray-500 text-xl w-full pr-5 tracking-normal"
           />
         </div>
         <div className="flex items-center justify-center p-3 rounded-full bg-red-600">

@@ -20,7 +20,7 @@ const Categories = () => {
 
   return (
     <div className="bg-black min-h-max relative">
-      <div className="flex flex-col gap-14 pb-20 -mt-20">
+      <div className="flex flex-col gap-7 sm:gap-14 pb-20 -mt-20">
         <MoviesList title={"Now Playing"} movies={nowPlayingMovies} />
         <MoviesList title={"Popular"} movies={popularMovies} />
         <MoviesList title={"Top Rated"} movies={topRatedMovies} />

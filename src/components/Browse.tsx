@@ -33,25 +33,25 @@ const Browse = () => {
 
   return (
     <div>
-      <div className="relative bg-slate-50 min-h-screen w-full">
+      <div className="relative bg-slate-50 sm:min-h-screen w-full">
         {!showGPTSearchView && (
           <>
             <div className="absolute flex items-center justify-between w-full px-[5%] h-full lg:pl-5">
-              <div className="p-10 flex flex-col gap-y-6 w-1/4">
+              <div className="sm:p-10 flex flex-col gap-y-6 sm:w-1/4">
                 <div>
                   <img
                     src={`${TMDB_LOGO_BASE_URL}${movies?.[index]?.logoPath}`}
                     alt={movies?.[index]?.title}
-                    className="w-[200px] aspect-auto"
+                    className="w-32 sm:w-[200px] aspect-auto"
                   />
                 </div>
-                <div className="text-4xl font-bold antialiased [text-shadow:_0_0_6px_rgb(0_0_0_/_40%)] w-max">
+                <div className="text-4xl font-bold antialiased [text-shadow:_0_0_6px_rgb(0_0_0_/_40%)] w-max hidden sm:block">
                   {movies?.[index]?.title}
                 </div>
-                <div className="antialiased text-slate-10 text-wrap min-h-min [text-shadow:_0_0_6px_rgb(0_0_0_/_40%)] ">
+                <div className="antialiased text-slate-10 text-wrap min-h-min [text-shadow:_0_0_6px_rgb(0_0_0_/_40%)] hidden sm:block">
                   {movies?.[index]?.overview}
                 </div>
-                <div className="flex gap-3">
+                <div className="gap-3 hidden sm:flex">
                   <button className="text-lg py-2 px-10 bg-slate-100 hover:text-white hover:bg-slate-100/50 transition-all duration-200 text-black rounded font-medium flex items-center gap-2 cursor-pointer">
                     <span>
                       <GrPlayFill />
@@ -84,7 +84,7 @@ const Browse = () => {
         )}
       </div>
       {!showGPTSearchView && (
-        <div className="text-white">
+        <div className="text-white mt-11 [box-shadow:0px_-20px_37px_10px_rgb(0,0,0)] relative sm:static">
           <Categories />
         </div>
       )}
