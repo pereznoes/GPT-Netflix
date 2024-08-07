@@ -1,13 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+type Movie = {
+  id: number;
+  title: string;
+  overview: string;
+  logo_path: string;
+  backdrop_path: string;
+};
+
 const moviesSlice = createSlice({
   name: "movies",
   initialState: {
     categories: {
-      nowPlayingMovies: null,
-      popularMovies: null,
-      topRatedMovies: null,
-      trendingMovies: null,
+      nowPlayingMovies: <Movie[] | null>null,
+      popularMovies: <Movie[] | null>null,
+      topRatedMovies: <Movie[] | null>null,
+      trendingMovies: <Movie[] | null>null,
     },
     trailerKeys: {
       nowPlaying: null,

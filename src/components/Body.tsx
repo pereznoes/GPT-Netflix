@@ -6,6 +6,10 @@ import { nowPlayingLoader } from "../loaders/nowPlayingLoader";
 const Body = () => {
   const appRouter = createBrowserRouter([
     {
+      path: "/",
+      element: <Login />,
+    },
+    {
       path: "/login",
       element: <Login />,
     },

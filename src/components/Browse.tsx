@@ -40,7 +40,7 @@ const Browse = () => {
               <div className="sm:p-10 flex flex-col gap-y-6 sm:w-1/4">
                 <div>
                   <img
-                    src={`${TMDB_LOGO_BASE_URL}${movies?.[index]?.logoPath}`}
+                    src={`${TMDB_LOGO_BASE_URL}${movies?.[index]?.logo_path}`}
                     alt={movies?.[index]?.title}
                     className="w-32 sm:w-[200px] aspect-auto"
                   />
@@ -66,7 +66,7 @@ const Browse = () => {
             </div>
             <div>
               <iframe
-                src={YT_IFRAME_URL(trailerKey[index])}
+                src={YT_IFRAME_URL(trailerKey![index])}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 className="w-full aspect-video"
